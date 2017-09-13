@@ -22,17 +22,9 @@
  */
 'use strict';
 
-// React imports
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
-
-// Redux imports
-import { connect } from 'react-redux';
-
 // Imports
 import * as Constants from '../constants';
-import ScrollableTabView from 'react-native-scrollable-tab-view';
-import TabBar from '../components/TabBar';
+import { NavigationRouteConfigMap, TabNavigator } from 'react-navigation';
 
 // Tabs
 import Discover from './discover/Discover';
@@ -44,92 +36,37 @@ import Settings from './settings/Settings';
 // Types
 import { Tab } from '../../typings/global';
 
-interface Props {
-  tab: Tab; // The current tab
-}
-
-interface State {}
-
-class TabView extends React.PureComponent<Props, State> {
-
-  /**
-   * Renders the app tabs and icons, an indicator to show the current tab, and a navigator with the tab contents.
-   *
-   * @returns {JSX.Element} the hierarchy of views to render
-   */
-  render(): JSX.Element {
-    const numberOfTabs: number = Constants.Tabs.length;
-    const tabs = [];
-    for (let i = 0; i < numberOfTabs; i++) {
-      switch (Constants.Tabs[i]) {
-        case 'find':
-          tabs.push(
-            <Find
-                key='find'
-                tabLabel='find' />
-          );
-          break;
-        case 'discover':
-          tabs.push(
-            <Discover
-                key='discover'
-                tabLabel='discover' />
-          );
-          break;
-        case 'search':
-          tabs.push(
-            <Search
-                key='search'
-                tabLabel='search' />
-          );
-          break;
-        case 'settings':
-          tabs.push(
-            <Settings
-                key='settings'
-                tabLabel='settings' />
-          );
-          break;
-        case 'schedule':
-          tabs.push(
-            <Schedule
-                key='schedule'
-                tabLabel='schedule' />
-          );
-          break;
-        default:
-          throw new Error(`Unimplemented tab type: ${Constants.Tabs[i]}`);
-      }
-    }
-
-    return (
-      <View style={_styles.container}>
-        <ScrollableTabView
-            locked={true}
-            page={Constants.Tabs.indexOf(this.props.tab)}
-            renderTabBar={(): JSX.Element => <TabBar />}
-            scrollWithoutAnimation={true}
-            tabBarPosition='bottom'>
-          {tabs.map((tab: JSX.Element) => tab)}
-        </ScrollableTabView>
-      </View>
-    );
-
+/**
+ * Return the relevant container element for the given tab.
+ *
+ * @param {Tab} tab a tab name
+ * @returns {JSX.Element} a JSX.Element tab container
+ */
+function getTabScreen(tab: Tab): JSX.Element {
+  switch (tab) {
+    case 'discover': return Discover;
+    case 'find': return Find;
+    case 'schedule': return Schedule;
+    case 'search': return Search;
+    case 'settings': return Settings;
+    default: throw new Error(`Unexpected tab name: ${tab}`);
   }
 }
 
-// Private styles for component
-const _styles = StyleSheet.create({
-  container: {
-    backgroundColor: Constants.Colors.primaryBackground,
-    flex: 1,
-  },
-});
-
-const mapStateToProps = (store: any): object => {
-  return {
-    tab: store.navigation.tab,
+const routeMap: NavigationRouteConfigMap = {};
+for (const tab of Constants.Tabs) {
+  routeMap[tab] = {
+    path: tab,
+    screen: getTabScreen(tab),
   };
-};
+}
 
-export default connect(mapStateToProps, undefined)(TabView) as any;
+const TabView = TabNavigator(
+  routeMap,
+  {
+    initialRouteName: Constants.Tabs[0],
+    swipeEnabled: false,
+  }
+);
+
+export default TabView;

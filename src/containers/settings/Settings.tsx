@@ -55,6 +55,7 @@ import * as Display from '../../util/Display';
 import * as External from '../../util/External';
 import * as TextUtils from '../../util/TextUtils';
 import * as Translations from '../../util/Translations';
+import { NavigationTabScreenOptions } from 'react-navigation';
 
 // Types
 import { Language } from '../../util/Translations';
@@ -88,6 +89,18 @@ interface Setting extends Link, Name {
 const DEFAULT_OPACITY = 0.4;
 
 class Settings extends React.PureComponent<Props, State> {
+
+  /** Tab Bar navigation options */
+  static navigationOptions: NavigationTabScreenOptions = {
+    tabBarIcon: ({ tintColor }: { tintColor: (string | null) }): JSX.Element => (
+      <Ionicons
+          color={tintColor}
+          name={Platform.OS === 'android' ? 'md-settings' : 'ios-settings'}
+          size={Constants.Sizes.Icons.Tab} />
+    ),
+    tabBarLabel: (): string => Translations.get('settings'),
+    title: 'settings',
+  };
 
   /** List of sections of settings to render. */
   _settingSections: Section < Setting >[] = [];

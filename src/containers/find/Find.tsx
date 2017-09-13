@@ -32,7 +32,10 @@ import { connect } from 'react-redux';
 import * as actions from '../../actions';
 
 // Imports
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import * as Constants from '../../constants';
+import * as Translations from '../../util/Translations';
+import { NavigationTabScreenOptions } from 'react-navigation';
 
 // Screen imports
 import { default as BuildingScreen } from './Building';
@@ -54,6 +57,18 @@ interface Props {
 interface State {}
 
 class Find extends React.PureComponent<Props, State> {
+
+  /** Tab Bar navigation options */
+  static navigationOptions: NavigationTabScreenOptions = {
+    tabBarIcon: ({ tintColor }: { tintColor: (string | null) }): JSX.Element => (
+      <MaterialIcons
+          color={tintColor}
+          name={'near-me'}
+          size={Constants.Sizes.Icons.Tab} />
+    ),
+    tabBarLabel: (): string => Translations.get('find'),
+    title: 'find',
+  };
 
   /** List of buildings in the app. */
   _buildingList: Building[] = [];

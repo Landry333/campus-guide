@@ -43,12 +43,14 @@ import * as actions from '../../actions';
 import ActionButton from 'react-native-action-button';
 import CourseModal from './modals/Course';
 import Header from '../../components/Header';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import * as Arrays from '../../util/Arrays';
 import * as Configuration from '../../util/Configuration';
 import * as Constants from '../../constants';
 import * as Display from '../../util/Display';
 import * as Translations from '../../util/Translations';
+import { NavigationTabScreenOptions } from 'react-navigation';
 
 // Tabs
 import WeeklySchedule from './WeeklySchedule';
@@ -94,6 +96,18 @@ const semesterIcon = {
 };
 
 class Schedule extends React.PureComponent<Props, State> {
+
+  /** Tab Bar navigation options */
+  static navigationOptions: NavigationTabScreenOptions = {
+    tabBarIcon: ({ tintColor }: { tintColor: (string | null) }): JSX.Element => (
+      <Ionicons
+          color={tintColor}
+          name={Platform.OS === 'android' ? 'md-calendar' : 'ios-calendar-outline'}
+          size={Constants.Sizes.Icons.Tab} />
+    ),
+    tabBarLabel: (): string => Translations.get('schedule'),
+    title: 'schedule',
+  };
 
   /**
    * Constructor.

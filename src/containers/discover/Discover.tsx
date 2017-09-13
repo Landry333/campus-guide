@@ -24,7 +24,7 @@
 
 // React imports
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import { Navigator } from 'react-native-deprecated-custom-components';
 
 // Redux imports
@@ -32,7 +32,10 @@ import { connect } from 'react-redux';
 import * as actions from '../../actions';
 
 // Imports
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import * as Constants from '../../constants';
+import * as Translations from '../../util/Translations';
+import { NavigationTabScreenOptions } from 'react-navigation';
 
 // Screen imports
 import Home from './Home';
@@ -59,6 +62,18 @@ interface Props {
 interface State {}
 
 class Discover extends React.PureComponent<Props, State> {
+
+  /** Tab Bar navigation options */
+  static navigationOptions: NavigationTabScreenOptions = {
+    tabBarIcon: ({ tintColor }: { tintColor: (string | null) }): JSX.Element => (
+      <Ionicons
+          color={tintColor}
+          name={Platform.OS === 'android' ? 'md-compass' : 'ios-compass'}
+          size={Constants.Sizes.Icons.Tab} />
+    ),
+    tabBarLabel: (): string => Translations.get('discover'),
+    title: 'discover',
+  };
 
   /**
    * Determines whether the initial route can be navigated back from.

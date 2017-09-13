@@ -46,6 +46,7 @@ import * as actions from '../../actions';
 
 // Imports
 import Header from '../../components/Header';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import PaddedIcon from '../../components/PaddedIcon';
 import * as Arrays from '../../util/Arrays';
 import * as Configuration from '../../util/Configuration';
@@ -55,6 +56,7 @@ import * as External from '../../util/External';
 import * as Searchable from './Searchable';
 import * as TextUtils from '../../util/TextUtils';
 import * as Translations from '../../util/Translations';
+import { NavigationTabScreenOptions } from 'react-navigation';
 
 // Types
 import { SearchSupport } from '../../util/Search';
@@ -85,6 +87,18 @@ const SINGLE = 1;
 const SEARCH_DELAY_TIME = 800;
 
 class SearchView extends React.PureComponent<Props, State> {
+
+  /** Tab Bar navigation options */
+  static navigationOptions: NavigationTabScreenOptions = {
+    tabBarIcon: ({ tintColor }: { tintColor: (string | null) }): JSX.Element => (
+      <Ionicons
+          color={tintColor}
+          name={Platform.OS === 'android' ? 'md-search' : 'ios-search'}
+          size={Constants.Sizes.Icons.Tab} />
+    ),
+    tabBarLabel: (): string => Translations.get('search'),
+    title: 'search',
+  };
 
   /** Set of complete, unaltered search results */
   _searchResults: Section<Searchable.SearchResult>[] = [];
